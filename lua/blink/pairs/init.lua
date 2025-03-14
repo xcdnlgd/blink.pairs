@@ -47,7 +47,7 @@ function pairs.download_if_available(callback)
       vim.notify('[blink.pairs] Downloading prebuilt binary...', vim.log.levels.INFO, { title = 'blink.pairs' })
     end,
 
-    root_dir,
+    root_dir = root_dir,
     output_dir = '/target/release',
     binary_name = 'blink_pairs', -- excluding `lib` prefix
   }, callback)
