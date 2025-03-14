@@ -1,9 +1,3 @@
---- NOTE: this file isn't required when using `blink.download` to download prebuilt binaries
---- since it'll setup the `cpath` for you automatically. So you can do just the `require('your_plugin')`
----
---- But if you want to support building from source, without `blink.download` as a dependency,
---- you can use this file to setup the `cpath`
-
 --- @return string
 local function get_lib_extension()
   if jit.os:lower() == 'mac' or jit.os:lower() == 'osx' then return '.dylib' end
@@ -23,4 +17,4 @@ package.cpath = package.cpath
   .. '../../../target/release/?'
   .. get_lib_extension()
 
-return require('your_plugin')
+return require('blink_pairs')
