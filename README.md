@@ -13,6 +13,8 @@ Rainbow highlighting and autopairs (TBD) for Neovim. Uses a custom parser intern
   dependencies = 'saghen/blink.download',
   -- OR build from source
   build = 'cargo build --release',
+  -- OR build from source with nix
+  build = 'nix build .#build-plugin'
 
   opts = {
     highlights = {
