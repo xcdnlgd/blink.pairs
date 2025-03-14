@@ -171,15 +171,6 @@ where
         }
     }
 
-    // Remove trailing empty line
-    if matches_by_line
-        .last()
-        .map(|matches| matches.is_empty())
-        .unwrap_or(false)
-    {
-        matches_by_line.pop();
-    }
-
     matches_by_line
 }
 

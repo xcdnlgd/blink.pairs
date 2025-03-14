@@ -12,10 +12,11 @@ static PARSED_BUFFERS: LazyLock<Mutex<HashMap<i32, Vec<Vec<Match>>>>> =
 
 fn parse_buffer(
     _lua: &Lua,
-    (bufnr, filetype, text, start_line, old_end_line): (
+    (bufnr, filetype, text, start_line, old_end_line, new_end_line): (
         i32,
         String,
         String,
+        Option<i32>,
         Option<i32>,
         Option<i32>,
     ),
@@ -26,13 +27,17 @@ fn parse_buffer(
     if let Some(existing_matches_by_line) = parsed_buffers.get_mut(&bufnr) {
         let start_line = start_line.unwrap_or(0) as usize;
         let old_end_line = old_end_line.unwrap_or(existing_matches_by_line.len() as i32) as usize;
-
         let old_range = start_line..old_end_line;
 
         return match parse_filetype(filetype, text) {
             None => Ok(false),
             Some(matches_by_line) => {
-                existing_matches_by_line.splice(old_range, matches_by_line);
+                let new_end_line = new_end_line
+                    .unwrap_or((start_line + existing_matches_by_line.len()) as i32)
+                    as usize;
+                let length = new_end_line - start_line;
+
+                existing_matches_by_line.splice(old_range, matches_by_line[0..length].to_vec());
                 recalculate_stack_heights(existing_matches_by_line);
                 Ok(true)
             }
