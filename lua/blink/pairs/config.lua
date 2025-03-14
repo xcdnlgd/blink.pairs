@@ -20,7 +20,7 @@ local config = {
     'RainbowBlue',
   },
   priority = 200,
-  ns = vim.api.nvim_create_namespace('blink.delimiters'),
+  ns = vim.api.nvim_create_namespace('blink.pairs'),
   debug = false,
 }
 

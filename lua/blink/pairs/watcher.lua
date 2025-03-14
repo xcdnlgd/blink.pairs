@@ -11,9 +11,9 @@ local watcher = {
 local function parse_buffer(bufnr, start_line, old_end_line, new_end_line)
   local start_time = vim.uv.hrtime()
 
-  local did_parse = require('blink.delimiters.rust').parse_buffer(bufnr, start_line, old_end_line, new_end_line)
+  local did_parse = require('blink.pairs.rust').parse_buffer(bufnr, start_line, old_end_line, new_end_line)
 
-  if did_parse and require('blink.delimiters.config').debug then
+  if did_parse and require('blink.pairs.config').debug then
     vim.print('parsing time: ' .. (vim.uv.hrtime() - start_time) / 1e6 .. ' ms')
   end
 
@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
     if watched_buf.changedtick == vim.b[event.buf].changedtick then return end
 
     watched_buf.changedtick = vim.b[event.buf].changedtick
-    require('blink_delimiters').parse_buffer(event.buf)
+    require('blink.pairs.rust').parse_buffer(event.buf)
   end,
 })
 
