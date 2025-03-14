@@ -1,6 +1,6 @@
 {
   description =
-    "Rainbow highlighting and intelligent auto-pairs (TBD) for Neovim";
+    "Rainbow highlighting and intelligent auto-pairs (TODO) for Neovim";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";

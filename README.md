@@ -1,6 +1,6 @@
 # Blink Pairs (blink.pairs)
 
-Rainbow highlighting and autopairs (TBD) for Neovim. Uses a custom parser internally which takes ~4ms to parse a 400k line file, and ~0.1ms for subsequent incremental updates.
+Rainbow highlighting and autopairs (TODO) for Neovim. Uses a custom parser internally which takes ~4ms to parse a 400k line file, and ~0.1ms for subsequent incremental updates.
 
 ## Installation
 
