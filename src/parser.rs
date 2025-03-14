@@ -1,9 +1,5 @@
-use std::ops::RangeBounds;
-
 use logos::{Lexer, Logos, Source};
-use nvim_oxi::conversion::{Error as ConversionError, ToObject};
-use nvim_oxi::serde::Serializer;
-use nvim_oxi::{api::Buffer, lua, Object};
+use mlua::{serde::Serializer, IntoLua};
 use serde::Serialize;
 
 use super::languages::*;
@@ -17,32 +13,14 @@ pub struct Match {
     stack_height: usize,
 }
 
-impl ToObject for Match {
-    fn to_object(self) -> Result<Object, ConversionError> {
-        self.serialize(Serializer::new()).map_err(Into::into)
-    }
-}
-impl lua::Pushable for Match {
-    unsafe fn push(self, lstate: *mut lua::ffi::lua_State) -> Result<std::ffi::c_int, lua::Error> {
-        self.to_object()
-            .map_err(lua::Error::push_error_from_err::<Self, _>)?
-            .push(lstate)
+// TODO: how do we derive this?
+impl IntoLua for Match {
+    fn into_lua(self, lua: &mlua::Lua) -> mlua::Result<mlua::Value> {
+        self.serialize(Serializer::new(lua))
     }
 }
 
-pub fn parse_lines<R>(buffer: Buffer, line_range: R) -> Option<Vec<Vec<Match>>>
-where
-    R: RangeBounds<usize>,
-{
-    let filetype = buffer.get_option::<String>("filetype").ok()?;
-
-    let lines = buffer.get_lines(line_range, false).ok()?;
-    let mut text: String = "".to_string();
-    for line in lines {
-        text.push_str(&line.to_string_lossy());
-        text.push('\n');
-    }
-
+pub fn parse_filetype(filetype: String, text: String) -> Option<Vec<Vec<Match>>> {
     match filetype.as_str() {
         "c" => Some(parse_with_lexer(CToken::lexer(&text))),
         "cpp" => Some(parse_with_lexer(CppToken::lexer(&text))),

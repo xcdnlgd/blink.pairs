@@ -9,6 +9,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 logos = "0.15.0"
-mlua = { version = "0.10.2", features = ["module", "luajit"] }
-nvim-oxi = { version = "0.5.1", features = ["neovim-0-10"] }
-serde = "1.0.219"
+mlua = { version = "0.10.2", features = ["module", "luajit", "serialize"] }
+serde = { version = "1.0.219", features = ["derive"] }
