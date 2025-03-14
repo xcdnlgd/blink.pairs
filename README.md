@@ -1,38 +1,27 @@
-# Neovim Lua Rust Template
+# Blink Pairs (blink.pairs)
 
-A template for creating Neovim plugins in Lua with an accompanying Rust library.
+Rainbow highlighting and autopairs (TBD) for Neovim. Uses a custom parser internally which takes ~4ms to parse a 400k line file, and ~0.1ms for subsequent incremental updates.
 
 ## Installation
 
-### Development
-
 ```lua
 {
   'saghen/blink.pairs',
+  version = '*', -- (recommended) only required with prebuilt binaries
 
-  -- see lazy.nvim docs (`config.dev`): https://lazy.folke.io/configuration
-  dev = true,
-
-  -- optional, see `lua/blink.pairs/init.lua`
-  dependencies = 'saghen/blink.download',
-
-  build = 'cargo build --release',
-  opts = {}
-}
-```
-
-### Stable
-
-```lua
-{
-  'saghen/blink.pairs',
-  version = '*', -- only required with prebuilt binaries
-
-  -- optional, see `lua/blink.pairs/init.lua`
-  -- download prebuilt binaries, from github releases, and setup `cpath`
+  -- download prebuilt binaries from github releases
   dependencies = 'saghen/blink.download',
   -- OR build from source
   build = 'cargo build --release',
 
-  opts = {}
+  opts = {
+    highlights = {
+      'RainbowOrange',
+      'RainbowPurple',
+      'RainbowBlue',
+    },
+    priority = 200,
+    ns = vim.api.nvim_create_namespace('blink.pairs'),
+    debug = false,
+  }
 }
