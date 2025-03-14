@@ -35,7 +35,7 @@ function pairs.download_if_available(callback)
   if not success then return callback() end
 
   -- See https://github.com/Saghen/blink.download for more info
-  local root_dir = vim.fn.resolve(debug.getinfo(1).source:match('@?(.*/)') .. '../../')
+  local root_dir = vim.fn.resolve(debug.getinfo(1).source:match('@?(.*/)') .. '../../../')
 
   downloader.ensure_downloaded({
     -- omit this property to disable downloading
