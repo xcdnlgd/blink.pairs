@@ -11,20 +11,8 @@ function pairs.setup(user_config)
   pairs.download_if_available(function(err)
     if err then error(err) end
 
-    vim.api.nvim_set_decoration_provider(config.ns, {
-      on_win = function(_, _, bufnr) return require('blink.pairs.watcher').attach(bufnr) end,
-      on_line = function(_, _, bufnr, line_number)
-        for _, match in ipairs(require('blink.pairs.rust').get_parsed_line(bufnr, line_number)) do
-          vim.api.nvim_buf_set_extmark(bufnr, config.ns, line_number, match.col, {
-            end_col = match.col + 1,
-            hl_group = config.highlights[match.stack_height % #config.highlights + 1],
-            hl_mode = 'combine',
-            priority = config.priority,
-            ephemeral = true,
-          })
-        end
-      end,
-    })
+    if config.mappings.enabled then require('blink.pairs.mappings').register(config.mappings.pairs) end
+    if config.highlights.enabled then require('blink.pairs.highlighter').register(config.highlights) end
   end)
 end
 

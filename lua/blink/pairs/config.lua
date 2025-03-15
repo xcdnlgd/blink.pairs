@@ -5,22 +5,46 @@
 --- opts = {}
 
 --- @class blink.pairs.ConfigStrict
---- @field highlights string[]
+--- @field mappings blink.pairs.MappingsConfig
+--- @field highlights blink.pairs.HighlightsConfig
+--- @field debug boolean
+
+--- @class blink.pairs.MappingsConfig
+--- @field enabled boolean
+--- @field pairs blink.pairs.Pairs
+
+--- @class blink.pairs.HighlightsConfig
+--- @field enabled boolean
+--- @field groups string[]
 --- @field priority number
 --- @field ns integer
---- @field debug boolean
 
 --- @class blink.pairs.Config : blink.pairs.ConfigStrict, {}
 
 --- @type blink.pairs.ConfigStrict
 local config = {
-  highlights = {
-    'RainbowOrange',
-    'RainbowPurple',
-    'RainbowBlue',
+  mappings = {
+    enabled = true,
+    pairs = {
+      ['('] = ')',
+      ['['] = ']',
+      ['{'] = '}',
+      ['<'] = '>',
+      ["'"] = { closing = "'", enter = false },
+      ['"'] = { closing = '"', enter = false },
+      ['`'] = { closing = '`', enter = false },
+    },
   },
-  priority = 200,
-  ns = vim.api.nvim_create_namespace('blink.pairs'),
+  highlights = {
+    enabled = true,
+    groups = {
+      'RainbowOrange',
+      'RainbowPurple',
+      'RainbowBlue',
+    },
+    priority = 200,
+    ns = vim.api.nvim_create_namespace('blink.pairs'),
+  },
   debug = false,
 }
 

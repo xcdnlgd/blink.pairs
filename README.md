@@ -1,6 +1,6 @@
 # Blink Pairs (blink.pairs)
 
-Rainbow highlighting and autopairs (TODO) for Neovim. Uses a custom parser internally which takes ~4ms to parse a 400k character file, and ~0.2ms for subsequent incremental updates.
+Rainbow highlighting and auto pairs for Neovim. Uses a custom parser internally which takes ~4ms to parse a 400k character file, and ~0.2ms for subsequent incremental updates.
 
 ## Installation
 
@@ -16,14 +16,31 @@ Rainbow highlighting and autopairs (TODO) for Neovim. Uses a custom parser inter
   -- OR build from source with nix
   build = 'nix build .#build-plugin'
 
+  --- @module 'blink.pairs'
+  --- @type blink.pairs.Config
   opts = {
-    highlights = {
-      'RainbowOrange',
-      'RainbowPurple',
-      'RainbowBlue',
+    mappings = {
+      enabled = true,
+      pairs = {
+        ['('] = ')',
+        ['['] = ']',
+        ['{'] = '}',
+        ['<'] = '>',
+        ["'"] = { closing = "'", enter = false },
+        ['"'] = { closing = '"', enter = false },
+        ['`'] = { closing = '`', enter = false },
+      },
     },
-    priority = 200,
-    ns = vim.api.nvim_create_namespace('blink.pairs'),
+    highlights = {
+      enabled = true,
+      groups = {
+        'RainbowOrange',
+        'RainbowPurple',
+        'RainbowBlue',
+      },
+      priority = 200,
+      ns = vim.api.nvim_create_namespace('blink.pairs'),
+    },
     debug = false,
   }
 }
