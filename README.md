@@ -25,7 +25,6 @@ Rainbow highlighting and auto-pairs for Neovim. Uses a custom parser internally 
         ['('] = ')',
         ['['] = ']',
         ['{'] = '}',
-        ['<'] = '>',
         ["'"] = { closing = "'", enter = false },
         ['"'] = { closing = '"', enter = false },
         ['`'] = { closing = '`', enter = false },
