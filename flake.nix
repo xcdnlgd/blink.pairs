@@ -29,7 +29,7 @@
           # nvim source files
           # all that are not nix, nor rust, nor other ignored files
           nvimFs = fs.difference ./. (fs.unions [ nixFs rustFs ]);
-          version = "0.1.0";
+          version = "0.2.0";
         in {
           blink-pairs-lib = pkgs.rustPlatform.buildRustPackage {
             pname = "blink-pairs-lib";

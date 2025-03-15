@@ -1,3 +1,12 @@
+## [0.2.0](https://github.com/Saghen/blink.pairs/compare/v0.1.0...v0.2.0) (2025-03-15)
+
+### Features
+
+* add json parser ([04054a1](https://github.com/Saghen/blink.pairs/commit/04054a12444eb6605467c50f4ae21315bbc8b407))
+* auto pairs support ([0afc7bb](https://github.com/Saghen/blink.pairs/commit/0afc7bb0f756a93dc65647634a2202652a46a5e2))
+* escaped and space mappings ([3438406](https://github.com/Saghen/blink.pairs/commit/3438406fc1cfb9a3ada5c46b1c408faf49e9e29c))
+* remove `<` from default config ([d287879](https://github.com/Saghen/blink.pairs/commit/d287879f4763a5e04391088e5d7266b949277c25))
+
 ## [0.1.0](https://github.com/Saghen/blink.pairs/compare/ea6839761ae64eecebe191363760812bb9a31824...v0.1.0) (2025-03-14)
 
 ### Features
