@@ -29,7 +29,6 @@ local config = {
       ['('] = ')',
       ['['] = ']',
       ['{'] = '}',
-      ['<'] = '>',
       ["'"] = { closing = "'", enter = false },
       ['"'] = { closing = '"', enter = false },
       ['`'] = { closing = '`', enter = false },
