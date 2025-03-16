@@ -16,7 +16,6 @@ local function parse_buffer(bufnr, start_line, old_end_line, new_end_line)
   local lines = vim.api.nvim_buf_get_lines(bufnr, start_line or 0, new_end_line or -1, false)
   local text = table.concat(lines, '\n')
 
-  -- if start_line ~= nil then vim.print(text, start_line, old_end_line) end
   local rust = require('blink.pairs.rust')
   local did_parse = rust.parse_buffer(bufnr, vim.bo[bufnr].filetype, text, start_line, old_end_line, new_end_line)
 
