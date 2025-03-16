@@ -1,6 +1,6 @@
 use mlua::prelude::*;
 use std::collections::HashMap;
-use std::sync::{LazyLock, Mutex};
+use std::sync::{LazyLock, Mutex, MutexGuard};
 
 use parser::{parse_filetype, recalculate_stack_heights, Match};
 
@@ -9,6 +9,19 @@ pub mod parser;
 
 static PARSED_BUFFERS: LazyLock<Mutex<HashMap<i32, Vec<Vec<Match>>>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
+
+fn get_parsed_buffers<'a>() -> MutexGuard<'a, HashMap<i32, Vec<Vec<Match>>>> {
+    match PARSED_BUFFERS.lock() {
+        Ok(lock) => lock,
+        Err(_) => {
+            // Reset the mutex
+            PARSED_BUFFERS.clear_poison();
+            let mut parsed_buffers = PARSED_BUFFERS.lock().unwrap();
+            *parsed_buffers = HashMap::new();
+            parsed_buffers
+        }
+    }
+}
 
 fn parse_buffer(
     _lua: &Lua,
@@ -21,12 +34,13 @@ fn parse_buffer(
         Option<i32>,
     ),
 ) -> LuaResult<bool> {
-    let mut parsed_buffers = PARSED_BUFFERS.lock().unwrap();
+    let mut parsed_buffers = get_parsed_buffers();
 
     // Incremental parse
     if let Some(existing_matches_by_line) = parsed_buffers.get_mut(&bufnr) {
-        let start_line = start_line.unwrap_or(0) as usize;
-        let old_end_line = old_end_line.unwrap_or(existing_matches_by_line.len() as i32) as usize;
+        let max_line = existing_matches_by_line.len() as i32;
+        let start_line = start_line.unwrap_or(0).min(max_line) as usize;
+        let old_end_line = old_end_line.unwrap_or(max_line).min(max_line) as usize;
         let old_range = start_line..old_end_line;
 
         return match parse_filetype(filetype, text) {
@@ -53,7 +67,7 @@ fn parse_buffer(
 }
 
 fn get_parsed_line(_lua: &Lua, (bufnr, line_number): (i32, i32)) -> LuaResult<Vec<Match>> {
-    let parsed_buffers = PARSED_BUFFERS.lock().unwrap();
+    let parsed_buffers = get_parsed_buffers();
 
     if let Some(parsed_buffer) = parsed_buffers.get(&bufnr) {
         if let Some(line_matches) = parsed_buffer.get(line_number as usize) {
