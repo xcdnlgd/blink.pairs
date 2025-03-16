@@ -2,6 +2,28 @@
 
 Rainbow highlighting and auto-pairs for Neovim. Uses a custom parser internally which takes ~4ms to parse a 400k character file, and ~0.2ms for subsequent incremental updates.
 
+## Behavior
+
+The behavior was inspired by [lexima.vim](https://github.com/cohama/lexima.vim) and [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
+
+| Before   | Input   | After    |
+|----------|---------|----------|
+| `\|`       | `(`       | `(\|)`     |
+| `\|`       | `"`       | `"\|"`     |
+| `""\|`     | `"`       | `"""\|"""` |
+| `''\|`     | `'`       | `'''\|'''` |
+| `\|`       | `[`       | `\[\|`     |
+| `\|`       | `"`       | `\"\|`     |
+| `\|`       | `'`       | `\'\|`     |
+| `A`        | `'`       | `A'`       |
+| `(\|)`     | `)`       | `()\|`     |
+| `'\|'`     | `'`       | `''\|`     |
+| `'''\|'''` | `'`       | `''''''\|` |
+| `(\|)`     | `<BS>`    | `\|`       |
+| `'\|'`     | `<BS>`    | `\|`       |
+| `( \| )`   | `<BS>`    | `(\|)`     |
+| `(\|)`     | `<Space>` | `( \| )`   |
+
 ## Installation
 
 ```lua
