@@ -38,7 +38,7 @@ local config = {
           when = function()
             local cursor = vim.api.nvim_win_get_cursor(0)
             local line = vim.api.nvim_get_current_line()
-            return line:sub(cursor[2], cursor[2] + 1) == "''"
+            return line:sub(cursor[2] - 1, cursor[2]) == "''"
           end,
           filetypes = { 'python' },
         },
@@ -60,7 +60,7 @@ local config = {
           when = function()
             local cursor = vim.api.nvim_win_get_cursor(0)
             local line = vim.api.nvim_get_current_line()
-            return line:sub(cursor[2], cursor[2] + 1) == '""'
+            return line:sub(cursor[2] - 1, cursor[2]) == '""'
           end,
           filetypes = { 'python', 'elixir', 'julia', 'kotlin', 'scala', 'sbt' },
         },
