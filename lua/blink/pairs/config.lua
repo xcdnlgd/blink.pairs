@@ -75,7 +75,7 @@ local config = {
             local line = vim.api.nvim_get_current_line()
             return line:sub(cursor[2] - 1, cursor[2]) == '``'
           end,
-          filetypes = { 'markdown', 'vimwiki', 'rmarkdown', 'rmd', 'pandoc', 'quarto' },
+          filetypes = { 'markdown', 'vimwiki', 'rmarkdown', 'rmd', 'pandoc', 'quarto', 'typst' },
         },
         { '`', enter = false },
       },
