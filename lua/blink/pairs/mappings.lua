@@ -126,9 +126,7 @@ function mappings.backspace(rules)
 
     -- ( | ) -> (|)
     -- TODO: disable in strings
-    -- TODO: why only one backspace here? Seems like neovim removes 2 spaces when pressing backspace?
-    -- but only in rust files??
-    if surrounding_space then return mappings.shift_keycode(1) .. '<BS>' end
+    if surrounding_space then return '<Del><BS>' end
 
     -- (|) -> |
     return mappings.shift_keycode(#rule.closing) .. string.rep('<BS>', #rule.opening + #rule.closing)
