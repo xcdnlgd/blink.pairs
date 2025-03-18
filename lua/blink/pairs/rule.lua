@@ -86,7 +86,7 @@ function M.rule_from_def(key, def)
   end
 
   local when = function()
-    if def.filetypes ~= nil then return vim.tbl_contains(def.filetypes, vim.bo.filetype) end
+    if def.filetypes ~= nil and not vim.tbl_contains(def.filetypes, vim.bo.filetype) then return false end
     return def.when == nil or def.when()
   end
 
