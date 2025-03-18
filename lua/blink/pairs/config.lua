@@ -67,7 +67,16 @@ local config = {
         { '"', enter = false },
       },
       ['`'] = {
-        { '```', '```', filetypes = { 'markdown', 'vimwiki', 'rmarkdown', 'rmd', 'pandoc', 'quarto' } },
+        {
+          '```',
+          '```',
+          when = function()
+            local cursor = vim.api.nvim_win_get_cursor(0)
+            local line = vim.api.nvim_get_current_line()
+            return line:sub(cursor[2] - 1, cursor[2]) == '``'
+          end,
+          filetypes = { 'markdown', 'vimwiki', 'rmarkdown', 'rmd', 'pandoc', 'quarto' },
+        },
         { '`', enter = false },
       },
     },
