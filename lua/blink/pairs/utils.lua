@@ -5,6 +5,8 @@ local utils = {}
 --- @param ignore_single_space? boolean
 --- @return boolean
 function utils.is_after_cursor(text, ignore_single_space)
+  assert(text ~= '', 'Text must not be empty')
+
   local cursor = vim.api.nvim_win_get_cursor(0)
   local line = vim.api.nvim_get_current_line()
 
@@ -12,7 +14,7 @@ function utils.is_after_cursor(text, ignore_single_space)
     if line:sub(cursor[2] + 1, cursor[2] + 1) == ' ' then cursor[2] = cursor[2] + 1 end
   end
 
-  return line:sub(cursor[2], cursor[2] + #text - 1) == text
+  return line:sub(cursor[2] + 1, cursor[2] + #text) == text
 end
 
 --- Checks if the text before the cursor is equal to the given text
@@ -20,6 +22,8 @@ end
 --- @param ignore_single_space? boolean
 --- @return boolean
 function utils.is_before_cursor(text, ignore_single_space)
+  assert(text ~= '', 'Text must not be empty')
+
   local cursor = vim.api.nvim_win_get_cursor(0)
   local line = vim.api.nvim_get_current_line()
 
