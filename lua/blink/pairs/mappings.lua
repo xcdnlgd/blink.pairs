@@ -98,7 +98,7 @@ function mappings.open_or_close_pair(key, rule)
   assert(pair == rule.closing, 'Opening and closing must be the same')
 
   -- |' -> '|
-  if utils.is_after_cursor(pair) then return mappings.close_pair(rule) end
+  if utils.is_after_cursor(pair) then return mappings.shift_keycode(#pair) end
 
   -- \| -> \'|
   if mappings.is_escaped() then return key end
@@ -115,7 +115,7 @@ function mappings.open_or_close_pair(key, rule)
   end
 
   -- | -> '|'
-  return mappings.open_pair(key, rule)
+  return pair .. pair .. mappings.shift_keycode(-#pair)
 end
 
 --- @param rules blink.pairs.Rule[]
