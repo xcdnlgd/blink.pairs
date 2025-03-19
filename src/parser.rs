@@ -39,6 +39,7 @@ pub fn parse_filetype(filetype: String, text: String) -> Option<Vec<Vec<Match>>>
         "swift" => Some(parse_with_lexer(SwiftToken::lexer(&text))),
         "typescript" => Some(parse_with_lexer(TypeScriptToken::lexer(&text))),
         "clojure" => Some(parse_with_lexer(ClojureToken::lexer(&text))),
+        "typst" => Some(parse_with_lexer(TypstToken::lexer(&text))),
         _ => None,
     }
 }

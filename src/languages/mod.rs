@@ -13,6 +13,7 @@ mod ruby;
 mod rust;
 mod swift;
 mod typescript;
+mod typst;
 
 pub use c::CToken;
 pub use clojure::ClojureToken;
@@ -29,6 +30,7 @@ pub use ruby::RubyToken;
 pub use rust::RustToken;
 pub use swift::SwiftToken;
 pub use typescript::TypeScriptToken;
+pub use typst::TypstToken;
 
 pub enum Token {
     DelimiterOpen,
