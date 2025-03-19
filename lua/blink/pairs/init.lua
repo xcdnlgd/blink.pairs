@@ -3,8 +3,16 @@
 
 local pairs = {}
 
+local function set_highlights()
+  vim.api.nvim_set_hl(0, 'BlinkPairsOrange', { ctermfg = 15, fg = '#d65d0e', default = true })
+  vim.api.nvim_set_hl(0, 'BlinkPairsPurple', { ctermfg = 13, fg = '#b16286', default = true })
+  vim.api.nvim_set_hl(0, 'BlinkPairsBlue', { ctermfg = 12, fg = '#458588', default = true })
+end
+
 --- @param user_config blink.pairs.Config
 function pairs.setup(user_config)
+  set_highlights()
+
   local config = require('blink.pairs.config')
   config.merge_with(user_config)
 
