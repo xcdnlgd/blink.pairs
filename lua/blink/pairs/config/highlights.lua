@@ -4,7 +4,7 @@
 --- @field priority number
 --- @field ns integer
 
-local validate = require('blink.cmp.config.utils').validate
+local validate = require('blink.pairs.config.utils').validate
 local highlights = {
   --- @type blink.pairs.HighlightsConfig
   default = {

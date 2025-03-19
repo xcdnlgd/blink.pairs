@@ -2,7 +2,7 @@
 --- @field enabled boolean
 --- @field pairs blink.pairs.RuleDefinitions
 
-local validate = require('blink.cmp.config.utils').validate
+local validate = require('blink.pairs.config.utils').validate
 local mappings = {
   --- @type blink.pairs.MappingsConfig
   default = {
