@@ -91,7 +91,7 @@ where
                     }),
                     stack_height: stack.len(),
                 };
-                stack.push(_match.closing.clone().unwrap().clone());
+                stack.push(_match.closing.clone().unwrap());
                 matches_by_line.last_mut().unwrap().push(_match);
             }
             (Normal, DelimiterClose(close), false) => {
