@@ -127,7 +127,7 @@ where
             }
 
             (Normal, BlockStringOpen, _) => state = InBlockString,
-            (InBlockComment, BlockStringClose, _) => state = Normal,
+            (InBlockString, BlockStringClose, _) => state = Normal,
 
             (_, Escape, false) => escaped_position = Some(lexer.span().end),
             _ => {}
