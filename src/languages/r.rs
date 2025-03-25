@@ -1,13 +1,13 @@
 use crate::define_token_enum;
 
-define_token_enum!(JavaToken, {
+define_token_enum!(RToken, {
     delimiters: {
         "(" => ")",
         "[" => "]",
         "{" => "}"
     },
-    line_comment: ["//"],
-    block_comment: ["/*" => "*/"],
+    line_comment: ["#"],
+    block_comment: [],
     string: ["\"", "'"],
-    block_string: [symmetric "\"\"\""]
+    block_string: []
 });

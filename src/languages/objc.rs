@@ -1,6 +1,6 @@
 use crate::define_token_enum;
 
-define_token_enum!(JavaToken, {
+define_token_enum!(ObjCToken, {
     delimiters: {
         "(" => ")",
         "[" => "]",
@@ -8,6 +8,6 @@ define_token_enum!(JavaToken, {
     },
     line_comment: ["//"],
     block_comment: ["/*" => "*/"],
-    string: ["\"", "'"],
-    block_string: [symmetric "\"\"\""]
+    string: ["\"", "@\""],
+    block_string: []
 });

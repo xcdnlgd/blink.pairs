@@ -36,29 +36,45 @@ pub fn parse_filetype(
 ) -> Option<(Vec<Vec<Match>>, Vec<ParseState>)> {
     match filetype {
         "c" => Some(parse_with_lexer(CToken::lexer(text), initial_state)),
+        "clojure" => Some(parse_with_lexer(ClojureToken::lexer(text), initial_state)),
         "cpp" => Some(parse_with_lexer(CppToken::lexer(text), initial_state)),
         "csharp" => Some(parse_with_lexer(CSharpToken::lexer(text), initial_state)),
+        "dart" => Some(parse_with_lexer(DartToken::lexer(text), initial_state)),
+        "elixir" => Some(parse_with_lexer(ElixirToken::lexer(text), initial_state)),
+        "erlang" => Some(parse_with_lexer(ErlangToken::lexer(text), initial_state)),
+        "fsharp" => Some(parse_with_lexer(FSharpToken::lexer(text), initial_state)),
         "go" => Some(parse_with_lexer(GoToken::lexer(text), initial_state)),
+        "haskell" => Some(parse_with_lexer(HaskellToken::lexer(text), initial_state)),
+        "haxe" => Some(parse_with_lexer(HaxeToken::lexer(text), initial_state)),
         "java" => Some(parse_with_lexer(JavaToken::lexer(text), initial_state)),
         "javascript" => Some(parse_with_lexer(
             JavaScriptToken::lexer(text),
             initial_state,
         )),
-        "json" => Some(parse_with_lexer(JsonToken::lexer(text), initial_state)),
-        "jsonc" => Some(parse_with_lexer(JsonToken::lexer(text), initial_state)),
-        "json5" => Some(parse_with_lexer(JsonToken::lexer(text), initial_state)),
+        "json" | "json5" | "jsonc" => Some(parse_with_lexer(JsonToken::lexer(text), initial_state)),
+        "kotlin" => Some(parse_with_lexer(KotlinToken::lexer(text), initial_state)),
+        "lean" => Some(parse_with_lexer(LeanToken::lexer(text), initial_state)),
         "lua" => Some(parse_with_lexer(LuaToken::lexer(text), initial_state)),
+        "objc" => Some(parse_with_lexer(ObjCToken::lexer(text), initial_state)),
+        "ocaml" => Some(parse_with_lexer(OCamlToken::lexer(text), initial_state)),
+        "perl" => Some(parse_with_lexer(PerlToken::lexer(text), initial_state)),
         "php" => Some(parse_with_lexer(PhpToken::lexer(text), initial_state)),
         "python" => Some(parse_with_lexer(PythonToken::lexer(text), initial_state)),
+        "r" => Some(parse_with_lexer(RToken::lexer(text), initial_state)),
         "ruby" => Some(parse_with_lexer(RubyToken::lexer(text), initial_state)),
         "rust" => Some(parse_with_lexer(RustToken::lexer(text), initial_state)),
+        "scala" => Some(parse_with_lexer(ScalaToken::lexer(text), initial_state)),
+        "sh" | "bash" | "zsh" | "fish" => {
+            Some(parse_with_lexer(ShellToken::lexer(text), initial_state))
+        }
         "swift" => Some(parse_with_lexer(SwiftToken::lexer(text), initial_state)),
+        "toml" => Some(parse_with_lexer(TomlToken::lexer(text), initial_state)),
         "typescript" => Some(parse_with_lexer(
             TypeScriptToken::lexer(text),
             initial_state,
         )),
-        "clojure" => Some(parse_with_lexer(ClojureToken::lexer(text), initial_state)),
         "typst" => Some(parse_with_lexer(TypstToken::lexer(text), initial_state)),
+        "zig" => Some(parse_with_lexer(ZigToken::lexer(text), initial_state)),
         _ => None,
     }
 }

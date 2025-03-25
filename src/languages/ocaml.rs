@@ -1,13 +1,13 @@
 use crate::define_token_enum;
 
-define_token_enum!(GoToken, {
+define_token_enum!(OCamlToken, {
     delimiters: {
         "(" => ")",
         "[" => "]",
         "{" => "}"
     },
-    line_comment: ["//"],
-    block_comment: ["/*" => "*/"],
+    line_comment: [],
+    block_comment: ["(*" => "*)"],
     string: ["\""],
-    block_string: [symmetric "`"]
+    block_string: []
 });
