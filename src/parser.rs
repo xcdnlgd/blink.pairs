@@ -78,20 +78,22 @@ where
         use {ParseState::*, Token::*};
         match (state, token, should_escape) {
             (Normal, DelimiterOpen(open), false) => {
+                let closing = match open {
+                    "(" => ")",
+                    "[" => "]",
+                    "{" => "}",
+                    "<" => ">",
+                    char => char,
+                }
+                .to_string();
                 let _match = Match {
                     text: open.to_string(),
                     row: line_number,
                     col: lexer.span().start - col_offset,
-                    closing: Some(match open {
-                        "(" => ")".to_string(),
-                        "[" => "]".to_string(),
-                        "{" => "}".to_string(),
-                        "<" => ">".to_string(),
-                        char => char.to_string(),
-                    }),
+                    closing: Some(closing.clone()),
                     stack_height: stack.len(),
                 };
-                stack.push(_match.closing.clone().unwrap());
+                stack.push(closing.clone());
                 matches_by_line.last_mut().unwrap().push(_match);
             }
             (Normal, DelimiterClose(close), false) => {
