@@ -5,9 +5,16 @@ edition = "2021"
 
 [lib]
 path = "src/lib.rs"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
+
+[[bench]]
+name = "lib"
+harness = false
 
 [dependencies]
 logos = "0.15.0"
 mlua = { version = "0.10.2", features = ["module", "luajit", "serialize"] }
 serde = { version = "1.0.219", features = ["derive"] }
+
+[dev-dependencies]
+criterion = "0.5.1"
