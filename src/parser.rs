@@ -121,7 +121,7 @@ where
 
             (Normal, String(open), false) => state = InString(open),
             (InString(open), String(close), false) if open == close => state = Normal,
-            (InString(_), NewLine, _) => state = Normal,
+            (InString(_), NewLine, false) => state = Normal,
 
             (Normal, BlockStringSymmetric(open), _) => state = InBlockStringSymmetric(open),
             (InBlockStringSymmetric(open), BlockStringSymmetric(close), _) if open == close => {
