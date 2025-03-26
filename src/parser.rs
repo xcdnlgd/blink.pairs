@@ -22,7 +22,6 @@ impl IntoLua for Match {
 #[derive(Debug, Clone)]
 pub enum ParseState {
     Normal,
-    InLineComment,
     InBlockComment,
     InString(String),
     InBlockStringSymmetric(String),
@@ -148,8 +147,8 @@ where
                     current_line_matches.push(_match);
                 }
 
-                // TODO: continue outer loop
-                (Normal, LineComment, false) => state = InLineComment,
+                // Stop parsing rest of line
+                (Normal, LineComment, false) => break,
 
                 (Normal, BlockCommentOpen, _) => state = InBlockComment,
                 (InBlockComment, BlockCommentClose, _) => state = Normal,
@@ -174,7 +173,7 @@ where
 
         // Reset state for linewise strings and comments
         state = match state {
-            InString(_) | InLineComment => Normal,
+            InString(_) => Normal,
             state => state,
         };
 
