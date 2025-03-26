@@ -22,9 +22,9 @@ impl IntoLua for Match {
 #[derive(Debug, Clone)]
 pub enum ParseState {
     Normal,
-    InBlockComment,
+    InBlockComment(&'static str),
     InBlockStringSymmetric(&'static str),
-    InBlockString,
+    InBlockString(&'static str),
 }
 
 pub fn parse_filetype(
@@ -98,16 +98,9 @@ where
             escaped_position = None;
 
             match (&state, token, should_escape) {
-                (Normal, DelimiterOpen(open), false) => {
-                    let closing = match open {
-                        "(" => ")",
-                        "[" => "]",
-                        "{" => "}",
-                        "<" => ">",
-                        _ => unreachable!(),
-                    };
+                (Normal, DelimiterOpen { text, closing }, false) => {
                     let _match = Match {
-                        text: open,
+                        text,
                         col: lexer.span().start,
                         closing: Some(closing),
                         stack_height: stack.len(),
@@ -115,15 +108,15 @@ where
                     stack.push(closing);
                     current_line_matches.push(_match);
                 }
-                (Normal, DelimiterClose(close), false) => {
+                (Normal, DelimiterClose(text), false) => {
                     if let Some(closing) = stack.last() {
-                        if close == *closing {
+                        if text == *closing {
                             stack.pop();
                         }
                     }
 
                     let _match = Match {
-                        text: close,
+                        text,
                         col: lexer.span().start,
                         closing: None,
                         stack_height: stack.len(),
@@ -134,18 +127,19 @@ where
                 // Stop parsing rest of line
                 (Normal, LineComment, false) => break,
 
-                (Normal, BlockCommentOpen, _) => state = InBlockComment,
-                (InBlockComment, BlockCommentClose, _) => state = Normal,
-
-                (Normal, BlockStringSymmetric(open), _) => state = InBlockStringSymmetric(open),
-                (InBlockStringSymmetric(open), BlockStringSymmetric(close), _)
-                    if *open == close =>
-                {
+                (Normal, BlockCommentOpen(closing), _) => state = InBlockComment(closing),
+                (InBlockComment(closing), BlockCommentClose(close), _) if *closing == close => {
                     state = Normal
                 }
 
-                (Normal, BlockStringOpen, _) => state = InBlockString,
-                (InBlockString, BlockStringClose, _) => state = Normal,
+                (Normal, BlockStringOpen(closing) | BlockStringSymmetric(closing), _) => {
+                    state = InBlockString(closing)
+                }
+                (
+                    InBlockString(closing),
+                    BlockStringClose(close) | BlockStringSymmetric(close),
+                    _,
+                ) if *closing == close => state = Normal,
 
                 (_, Escape, false) => escaped_position = Some(lexer.span().end),
                 _ => {}

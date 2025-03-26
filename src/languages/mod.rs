@@ -66,15 +66,18 @@ pub use zig::ZigToken;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Token {
-    DelimiterOpen(&'static str),
+    DelimiterOpen {
+        text: &'static str,
+        closing: &'static str,
+    },
     DelimiterClose(&'static str),
     LineComment,
-    BlockCommentOpen,
-    BlockCommentClose,
+    BlockCommentOpen(&'static str),
+    BlockCommentClose(&'static str),
     String,
+    BlockStringOpen(&'static str),
+    BlockStringClose(&'static str),
     BlockStringSymmetric(&'static str),
-    BlockStringOpen,
-    BlockStringClose,
     Escape,
 }
 
@@ -93,15 +96,15 @@ macro_rules! define_token_enum {
             $($block_string_open:literal => $block_string_close:literal),* $(,)?
         ]
     }) => {
-        #[allow(unused, private_interfaces)] // Ignore warnings about unused variants and SStr
+        #[allow(unused, private_interfaces)] // Ignore warnings about unused variants and SStr interface leakage
         #[derive(logos::Logos)]
         #[logos(skip r"[ \t\f]+")] // Skip whitespace
         #[logos(subpattern dstring = r#""([^"\\]|\\.)*""#)] // " string
         #[logos(subpattern sstring = r#"'([^'\\]|\\.)*'"#)] // ' string
         #[logos(subpattern schar = r#"'([^'\\]|\\.)'"#)] // ' char (single-character)
         pub enum $name {
-            $(#[token($open, |_|  $crate::languages::SStr($open) )])*
-            DelimiterOpen($crate::languages::SStr),
+            $(#[token($open, |_|  {($crate::languages::SStr($open), $crate::languages::SStr($close))} )])*
+            DelimiterOpen(($crate::languages::SStr, $crate::languages::SStr)),
 
             $(#[token($close, |_| $crate::languages::SStr($close) )])*
             DelimiterClose($crate::languages::SStr),
@@ -109,22 +112,21 @@ macro_rules! define_token_enum {
             $(#[token($line_comment)])*
             LineComment,
 
-            $(#[token($block_comment_open)])*
-            BlockCommentOpen,
-            $(#[token($block_comment_close)])*
-            BlockCommentClose,
+            $(#[token($block_comment_open, |_| $crate::languages::SStr($block_comment_open) )])*
+            BlockCommentOpen($crate::languages::SStr),
+            $(#[token($block_comment_close, |_| $crate::languages::SStr($block_comment_close) )])*
+            BlockCommentClose($crate::languages::SStr),
 
-            $(#[regex($string_regex, priority = 15)])*
+            $(#[regex($string_regex)])*
             String,
 
-            $(#[token($block_string_symmetric, |_| $crate::languages::SStr($block_string_symmetric) )])*
+            $(#[token($block_string_open, |_| $crate::languages::SStr($block_string_close), priority = 10 )])*
+            BlockStringOpen($crate::languages::SStr),
+            $(#[token($block_string_close, |_| $crate::languages::SStr($block_string_close), priority = 10 )])*
+            BlockStringClose($crate::languages::SStr),
+
+            $(#[token($block_string_symmetric, |_| $crate::languages::SStr($block_string_symmetric), priority = 10 )])*
             BlockStringSymmetric($crate::languages::SStr),
-
-            $(#[token($block_string_open)])*
-            BlockStringOpen,
-
-            $(#[token($block_string_close, priority = 10)])*
-            BlockStringClose,
 
             #[token("\\")]
             Escape,
@@ -133,15 +135,15 @@ macro_rules! define_token_enum {
         impl From<$name> for $crate::languages::Token {
             fn from(value: $name) -> Self {
                 match value {
-                    $name::DelimiterOpen(s) => Self::DelimiterOpen(s.0),
+                    $name::DelimiterOpen((text, closing)) => Self::DelimiterOpen { text: text.0, closing: closing.0 },
                     $name::DelimiterClose(s) => Self::DelimiterClose(s.0),
                     $name::LineComment => Self::LineComment,
-                    $name::BlockStringSymmetric(s) => Self::BlockStringSymmetric(s.0),
-                    $name::BlockCommentOpen => Self::BlockCommentOpen,
-                    $name::BlockCommentClose => Self::BlockCommentClose,
+                    $name::BlockCommentOpen(closing) => Self::BlockCommentOpen(closing.0),
+                    $name::BlockCommentClose(close) => Self::BlockCommentClose(close.0),
                     $name::String => Self::String,
-                    $name::BlockStringOpen => Self::BlockStringOpen,
-                    $name::BlockStringClose => Self::BlockStringClose,
+                    $name::BlockStringOpen(closing) => Self::BlockStringOpen(closing.0),
+                    $name::BlockStringClose(close) => Self::BlockStringClose(close.0),
+                    $name::BlockStringSymmetric(delim) => Self::BlockStringSymmetric(delim.0),
                     $name::Escape => Self::Escape,
                 }
             }
