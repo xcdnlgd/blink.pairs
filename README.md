@@ -43,14 +43,8 @@ The behavior was inspired by [lexima.vim](https://github.com/cohama/lexima.vim) 
   opts = {
     mappings = {
       enabled = true,
-      pairs = {
-        ['('] = ')',
-        ['['] = ']',
-        ['{'] = '}',
-        ["'"] = { closing = "'", enter = false },
-        ['"'] = { closing = '"', enter = false },
-        ['`'] = { closing = '`', enter = false },
-      },
+      -- see the defaults: https://github.com/Saghen/blink.pairs/blob/main/lua/blink/pairs/config/mappings.lua#L10
+      pairs = {},
     },
     highlights = {
       enabled = true,
@@ -59,8 +53,6 @@ The behavior was inspired by [lexima.vim](https://github.com/cohama/lexima.vim) 
         'BlinkPairsPurple',
         'BlinkPairsBlue',
       },
-      priority = 200,
-      ns = vim.api.nvim_create_namespace('blink.pairs'),
     },
     debug = false,
   }
