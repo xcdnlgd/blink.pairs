@@ -95,6 +95,7 @@ macro_rules! define_token_enum {
         #[logos(skip r"[ \t\f]+")] // Skip whitespace
         #[logos(subpattern dstring = r#""([^"\\]|\\.)*""#)] // " string
         #[logos(subpattern sstring = r#"'([^'\\]|\\.)*'"#)] // ' string
+        #[logos(subpattern schar = r#"'([^'\\]|\\.)'"#)] // ' char (single-character)
         pub enum $name<'s> {
             $(#[token($open)])*
             DelimiterOpen(&'s str),

@@ -8,6 +8,6 @@ define_token_enum!(RustToken, {
     },
     line_comment: ["//"],
     block_comment: ["/*" => "*/"],
-    string_regex: ["(?&dstring)", "(?&sstring)"],
+    string_regex: ["(?&dstring)", "(?&schar)"],
     block_string: ["r\"" => "\"", "r#\"" => "\"#", "r##\"" => "##\"", "r###\"" => "###\""]
 });
