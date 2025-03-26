@@ -65,18 +65,21 @@ pub use typst::TypstToken;
 pub use zig::ZigToken;
 
 #[derive(Debug, Clone, Copy)]
-pub enum Token<'s> {
-    DelimiterOpen(&'s str),
-    DelimiterClose(&'s str),
+pub enum Token {
+    DelimiterOpen(&'static str),
+    DelimiterClose(&'static str),
     LineComment,
     BlockCommentOpen,
     BlockCommentClose,
-    String(&'s str),
-    BlockStringSymmetric(&'s str),
+    String,
+    BlockStringSymmetric(&'static str),
     BlockStringOpen,
     BlockStringClose,
     Escape,
 }
+
+// static string newtype - needed because logos callbacks can't directly return `&'static str`
+struct SStr(&'static str);
 
 #[macro_export]
 macro_rules! define_token_enum {
@@ -90,18 +93,18 @@ macro_rules! define_token_enum {
             $($block_string_open:literal => $block_string_close:literal),* $(,)?
         ]
     }) => {
-        #[allow(unused)] // Ignore warnings about unused variants
+        #[allow(unused, private_interfaces)] // Ignore warnings about unused variants and SStr
         #[derive(logos::Logos)]
         #[logos(skip r"[ \t\f]+")] // Skip whitespace
         #[logos(subpattern dstring = r#""([^"\\]|\\.)*""#)] // " string
         #[logos(subpattern sstring = r#"'([^'\\]|\\.)*'"#)] // ' string
         #[logos(subpattern schar = r#"'([^'\\]|\\.)'"#)] // ' char (single-character)
-        pub enum $name<'s> {
-            $(#[token($open)])*
-            DelimiterOpen(&'s str),
+        pub enum $name {
+            $(#[token($open, |_|  $crate::languages::SStr($open) )])*
+            DelimiterOpen($crate::languages::SStr),
 
-            $(#[token($close)])*
-            DelimiterClose(&'s str),
+            $(#[token($close, |_| $crate::languages::SStr($close) )])*
+            DelimiterClose($crate::languages::SStr),
 
             $(#[token($line_comment)])*
             LineComment,
@@ -112,10 +115,10 @@ macro_rules! define_token_enum {
             BlockCommentClose,
 
             $(#[regex($string_regex, priority = 15)])*
-            String(&'s str),
+            String,
 
-            $(#[token($block_string_symmetric)])*
-            BlockStringSymmetric(&'s str),
+            $(#[token($block_string_symmetric, |_| $crate::languages::SStr($block_string_symmetric) )])*
+            BlockStringSymmetric($crate::languages::SStr),
 
             $(#[token($block_string_open)])*
             BlockStringOpen,
@@ -127,16 +130,16 @@ macro_rules! define_token_enum {
             Escape,
         }
 
-        impl<'s> From<$name<'s>> for $crate::languages::Token<'s> {
-            fn from(value: $name<'s>) -> Self {
+        impl From<$name> for $crate::languages::Token {
+            fn from(value: $name) -> Self {
                 match value {
-                    $name::DelimiterOpen(s) => Self::DelimiterOpen(s),
-                    $name::DelimiterClose(s) => Self::DelimiterClose(s),
+                    $name::DelimiterOpen(s) => Self::DelimiterOpen(s.0),
+                    $name::DelimiterClose(s) => Self::DelimiterClose(s.0),
                     $name::LineComment => Self::LineComment,
-                    $name::BlockStringSymmetric(s) => Self::BlockStringSymmetric(s),
+                    $name::BlockStringSymmetric(s) => Self::BlockStringSymmetric(s.0),
                     $name::BlockCommentOpen => Self::BlockCommentOpen,
                     $name::BlockCommentClose => Self::BlockCommentClose,
-                    $name::String(s) => Self::String(s),
+                    $name::String => Self::String,
                     $name::BlockStringOpen => Self::BlockStringOpen,
                     $name::BlockStringClose => Self::BlockStringClose,
                     $name::Escape => Self::Escape,

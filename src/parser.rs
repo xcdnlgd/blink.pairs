@@ -23,7 +23,7 @@ impl IntoLua for Match {
 pub enum ParseState {
     Normal,
     InBlockComment,
-    InBlockStringSymmetric(String),
+    InBlockStringSymmetric(&'static str),
     InBlockString,
 }
 
@@ -74,7 +74,7 @@ fn parse_with_lexer<'s, T>(
     initial_state: ParseState,
 ) -> (Vec<Vec<Match>>, Vec<ParseState>)
 where
-    T: Into<Token<'s>> + Logos<'s>,
+    T: Into<Token> + Logos<'s>,
 {
     let mut matches_by_line = Vec::with_capacity(lines.len());
     let mut state_by_line = Vec::with_capacity(lines.len());
@@ -99,13 +99,6 @@ where
 
             match (&state, token, should_escape) {
                 (Normal, DelimiterOpen(open), false) => {
-                    let open = match open {
-                        "(" => "(",
-                        "[" => "[",
-                        "{" => "{",
-                        "<" => "<",
-                        _ => unreachable!(),
-                    };
                     let closing = match open {
                         "(" => ")",
                         "[" => "]",
@@ -129,14 +122,6 @@ where
                         }
                     }
 
-                    let close = match close {
-                        ")" => ")",
-                        "]" => "]",
-                        "}" => "}",
-                        ">" => ">",
-                        _ => unreachable!(),
-                    };
-
                     let _match = Match {
                         text: close,
                         col: lexer.span().start,
@@ -152,10 +137,10 @@ where
                 (Normal, BlockCommentOpen, _) => state = InBlockComment,
                 (InBlockComment, BlockCommentClose, _) => state = Normal,
 
-                (Normal, BlockStringSymmetric(open), _) => {
-                    state = InBlockStringSymmetric(open.to_string())
-                }
-                (InBlockStringSymmetric(open), BlockStringSymmetric(close), _) if open == close => {
+                (Normal, BlockStringSymmetric(open), _) => state = InBlockStringSymmetric(open),
+                (InBlockStringSymmetric(open), BlockStringSymmetric(close), _)
+                    if *open == close =>
+                {
                     state = Normal
                 }
 
