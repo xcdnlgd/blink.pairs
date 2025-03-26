@@ -10,6 +10,6 @@ define_token_enum!(ZigToken, {
     // They do not have distinct open and close delimiters, so they treated as line comments.
     line_comment: ["//", "\\\\"],
     block_comment: [],
-    string: ["\""],
+    string_regex: ["(?&dstring)"],
     block_string: []
 });

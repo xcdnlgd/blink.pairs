@@ -8,6 +8,6 @@ define_token_enum!(HaxeToken, {
     },
     line_comment: ["//"],
     block_comment: ["/*" => "*/"],
-    string: ["\"", "'"],
+    string_regex: ["(?&dstring)", "(?&sstring)"],
     block_string: []
 });

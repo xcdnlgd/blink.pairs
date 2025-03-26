@@ -23,7 +23,6 @@ impl IntoLua for Match {
 pub enum ParseState {
     Normal,
     InBlockComment,
-    InString(String),
     InBlockStringSymmetric(String),
     InBlockString,
 }
@@ -153,9 +152,6 @@ where
                 (Normal, BlockCommentOpen, _) => state = InBlockComment,
                 (InBlockComment, BlockCommentClose, _) => state = Normal,
 
-                (Normal, String(open), false) => state = InString(open.to_string()),
-                (InString(open), String(close), false) if open == close => state = Normal,
-
                 (Normal, BlockStringSymmetric(open), _) => {
                     state = InBlockStringSymmetric(open.to_string())
                 }
@@ -170,12 +166,6 @@ where
                 _ => {}
             }
         }
-
-        // Reset state for linewise strings and comments
-        state = match state {
-            InString(_) => Normal,
-            state => state,
-        };
 
         matches_by_line.push(std::mem::take(&mut current_line_matches));
         state_by_line.push(state.clone());

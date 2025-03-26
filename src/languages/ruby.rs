@@ -8,6 +8,6 @@ define_token_enum!(RubyToken, {
     },
     line_comment: ["#"],
     block_comment: ["=begin" => "end"],
-    string: ["\"", "'"],
+    string_regex: ["(?&dstring)", "(?&sstring)"],
     block_string: []
 });

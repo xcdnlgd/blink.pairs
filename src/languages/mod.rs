@@ -84,7 +84,7 @@ macro_rules! define_token_enum {
         delimiters: { $($open:literal => $close:literal),* $(,)? },
         line_comment: [ $($line_comment:literal),* $(,)? ],
         block_comment: [ $($block_comment_open:literal => $block_comment_close:literal),* $(,)? ],
-        string: [ $($string_delim:literal),* $(,)? ],
+        string_regex: [ $($string_regex:literal),* $(,)? ],
         block_string: [
             $(symmetric $block_string_symmetric:literal),*
             $($block_string_open:literal => $block_string_close:literal),* $(,)?
@@ -93,6 +93,8 @@ macro_rules! define_token_enum {
         #[allow(unused)] // Ignore warnings about unused variants
         #[derive(logos::Logos)]
         #[logos(skip r"[ \t\f]+")] // Skip whitespace
+        #[logos(subpattern dstring = r#""([^"\\]|\\.)*""#)] // " string
+        #[logos(subpattern sstring = r#"'([^'\\]|\\.)*'"#)] // ' string
         pub enum $name<'s> {
             $(#[token($open)])*
             DelimiterOpen(&'s str),
@@ -108,7 +110,7 @@ macro_rules! define_token_enum {
             $(#[token($block_comment_close)])*
             BlockCommentClose,
 
-            $(#[token($string_delim)])*
+            $(#[regex($string_regex, priority = 15)])*
             String(&'s str),
 
             $(#[token($block_string_symmetric)])*
