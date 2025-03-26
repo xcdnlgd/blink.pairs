@@ -6,9 +6,9 @@ use super::languages::*;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Match {
-    pub text: String,
+    pub text: &'static str,
     pub col: usize,
-    pub closing: Option<String>,
+    pub closing: Option<&'static str>,
     pub stack_height: usize,
 }
 
@@ -101,17 +101,24 @@ where
 
             match (&state, token, should_escape) {
                 (Normal, DelimiterOpen(open), false) => {
+                    let open = match open {
+                        "(" => "(",
+                        "[" => "[",
+                        "{" => "{",
+                        "<" => "<",
+                        _ => unreachable!(),
+                    };
                     let closing = match open {
                         "(" => ")",
                         "[" => "]",
                         "{" => "}",
                         "<" => ">",
-                        char => char,
+                        _ => unreachable!(),
                     };
                     let _match = Match {
-                        text: open.to_string(),
+                        text: open,
                         col: lexer.span().start,
-                        closing: Some(closing.to_string()),
+                        closing: Some(closing),
                         stack_height: stack.len(),
                     };
                     stack.push(closing);
@@ -124,8 +131,16 @@ where
                         }
                     }
 
+                    let close = match close {
+                        ")" => ")",
+                        "]" => "]",
+                        "}" => "}",
+                        ">" => ">",
+                        _ => unreachable!(),
+                    };
+
                     let _match = Match {
-                        text: close.to_string(),
+                        text: close,
                         col: lexer.span().start,
                         closing: None,
                         stack_height: stack.len(),
