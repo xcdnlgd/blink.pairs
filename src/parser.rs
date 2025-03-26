@@ -76,8 +76,8 @@ fn parse_with_lexer<'s, T>(
 where
     T: Into<Token<'s>> + Logos<'s>,
 {
-    let mut matches_by_line = vec![];
-    let mut state_by_line = vec![];
+    let mut matches_by_line = Vec::with_capacity(lines.len());
+    let mut state_by_line = Vec::with_capacity(lines.len());
     let mut stack = vec![];
 
     let mut state = initial_state;
