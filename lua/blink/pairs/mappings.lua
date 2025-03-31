@@ -83,7 +83,7 @@ function mappings.close_pair(rule)
   -- |) -> )|
   if next_char == rule.closing:sub(1, 1) then return mappings.shift_keycode(#rule.closing) end
   -- | ) ->  )|
-  if next_char == ' ' and next_next_char == rule.closing then return mappings.shift_keycode(-2) end
+  if next_char == ' ' and next_next_char == rule.closing then return mappings.shift_keycode(2) end
 
   return rule.closing
 end
