@@ -27,6 +27,7 @@ local mappings = {
         {
           "'",
           enter = false,
+          space = false,
           when = function()
             local cursor = vim.api.nvim_win_get_cursor(0)
             local char = vim.api.nvim_get_current_line():sub(cursor[2], cursor[2])
@@ -46,7 +47,7 @@ local mappings = {
           end,
           filetypes = { 'python', 'elixir', 'julia', 'kotlin', 'scala', 'sbt' },
         },
-        { '"', enter = false },
+        { '"', enter = false, space = false },
       },
       ['`'] = {
         {
@@ -59,7 +60,7 @@ local mappings = {
           end,
           filetypes = { 'markdown', 'vimwiki', 'rmarkdown', 'rmd', 'pandoc', 'quarto', 'typst' },
         },
-        { '`', enter = false },
+        { '`', enter = false, space = false },
       },
     },
   },
