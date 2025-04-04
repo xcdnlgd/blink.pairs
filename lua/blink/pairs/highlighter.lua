@@ -1,10 +1,5 @@
 local highlighter = {}
 
---- @class blink.pairs.MatchparenConfig
---- @field enabled boolean
---- @field group string Highlight group for the matching pair
---- @field priority number Priority of the highlight
-
 --- @param config blink.pairs.HighlightsConfig
 function highlighter.register(config)
   vim.api.nvim_set_decoration_provider(config.ns, {

@@ -22,4 +22,4 @@
 --- @class (exact) blink.pairs.HighlightsConfigPartial : blink.pairs.HighlightsConfig, {}
 --- @field matchparen? blink.pairs.MatchparenConfigPartial
 
---- @class (exact) blink.pairs.MatchparenConfigPartial : blink.pairs.MatchparenConfig
+--- @class (exact) blink.pairs.MatchparenConfigPartial : blink.pairs.MatchparenConfig, {}
