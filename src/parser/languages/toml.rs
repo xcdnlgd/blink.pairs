@@ -8,6 +8,6 @@ define_matcher!(Toml {
         "{" => "}"
     ],
     line_comment: ["#"],
-    string: ["\""],
+    string: ["\"", "'"],
     block_string: ["\"\"\"" => "\"\"\""]
 });
